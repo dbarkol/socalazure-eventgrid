@@ -18,8 +18,12 @@ namespace WeWantTheFuncV2
     {
         [FunctionName("HttpTriggerFunc")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "eventsDatabase",
+                collectionName: "eventsCollection",
+                ConnectionStringSetting = "CosmosConnectionString")]
+                IAsyncCollector<string> documents,
             TraceWriter log)
         {
             log.Info("HttpTriggerFunc triggered");
@@ -42,6 +46,7 @@ namespace WeWantTheFuncV2
             }
             else if (eventTypeHeaderValue == "Notification")
             {
+                documents.AddAsync(requestBody.ToString());
                 log.Info(requestBody);
                 return new OkObjectResult("");
             }

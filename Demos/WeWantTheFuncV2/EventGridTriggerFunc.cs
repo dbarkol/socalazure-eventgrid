@@ -18,7 +18,7 @@ namespace WeWantTheFuncV2
             [CosmosDB(
                 databaseName: "eventsDatabase",
                 collectionName: "eventsCollection",
-                ConnectionStringSetting = "CosmosDBConnection")]out dynamic document,
+                ConnectionStringSetting = "CosmosConnectionString")]out dynamic document,
             TraceWriter log)
         {
             log.Info("EventGridTriggerFunc triggered");

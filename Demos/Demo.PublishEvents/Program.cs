@@ -32,7 +32,7 @@ namespace Demo.PublishEvents
 
         private static void Main(string[] args)
         {
-            const string message = "Event Grid is amazing!";
+            const string message = "Event Grid is super!";
 
             // Step 1: Get the text sentiment score
             var score = GetScore(message);
@@ -50,6 +50,7 @@ namespace Demo.PublishEvents
             // Step 3: Send the custom event
             PublishWithSdk(f).Wait();
             //PublishWithHttpClient(f).Wait();
+            //PublishCloudEvent(f).Wait();
 
             Console.WriteLine("Message sent");
             Console.ReadLine();
@@ -110,6 +111,40 @@ namespace Demo.PublishEvents
 
             // Publish grid event
             await client.PostAsync(string.Empty, stringContent);
+        }
+
+        private static async Task PublishCloudEvent(Feedback f)
+        {
+            // Event Grid must be configured to handle cloud events before publishing 
+            // Reference: https://docs.microsoft.com/en-us/azure/event-grid/cloudevents-schema#configure-event-grid-for-cloudevents
+
+            const string subscriptionId = "{subscription-id}";
+            const string resourceGroupName = "{resource-group-name}";
+            const string topicName = "{topic-name}";
+            var topic = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}>/providers/Microsoft.EventGrid/topics/{topicName}";
+
+            // Step 1: Initialize the client
+            var client = new HttpClient { BaseAddress = new Uri(TopicEndpoint) };
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("aeg-sas-key", TopicKey);
+
+            // Step 2: Initialize the cloud event
+            var cloudEvent = new CloudEvent<Feedback>
+            {
+                EventId = Guid.NewGuid().ToString(),
+                EventType = "newFeedback",
+                EventTypeVersion = "1.0",
+                CloudEventVersion = "0.1",
+                Data = f,
+                Source = $"{topic}#subjectfeedback",
+                EventTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+            };
+
+            // Step 3: Send the event
+            var json = JsonConvert.SerializeObject(cloudEvent);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await client.PostAsync(string.Empty, content);
         }
 
         private static int GetScore(string message)

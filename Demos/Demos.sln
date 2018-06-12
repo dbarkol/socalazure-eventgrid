@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Publish Events", "Publish Events", "{42312CDA-25AF-439E-A7F3-75386650BECB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Receive Events", "Receive Events", "{878EFAFA-636E-4226-9E9E-03AF09A7AB38}"
+	ProjectSection(SolutionItems) = preProject
+		apimanagement-subscription.xml = apimanagement-subscription.xml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C81B5D17-067B-43D8-8D45-BABEA8C566BB}"
 EndProject

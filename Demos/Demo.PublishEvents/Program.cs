@@ -92,7 +92,7 @@ namespace Demo.PublishEvents
             // Step 2: Add the topic key
             client.DefaultRequestHeaders.Add("aeg-sas-key", TopicKey);
 
-            // Step 3: 
+            // Step 3: Create a list of events
             var events = new List<GridEvent<Feedback>>
             {
                 new GridEvent<Feedback>()

@@ -9,7 +9,7 @@ namespace Demo.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("eventID")]
+        [JsonProperty("subject")]
         public string Subject { get; set; }
 
         [JsonProperty("eventType")]
